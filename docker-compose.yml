@@ -1,0 +1,12 @@
+services:
+  db:
+    image: mongo:latest
+    container_name: unahur_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - unahur_mongodata:/data/db
+
+volumes:
+  unahur_mongodata:
