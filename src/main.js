@@ -5,7 +5,8 @@ console.log("UnaHur - Anti-Social net");
 import express from 'express';
 import connectDB from './config/database.js'; // Importamos la conexion MongoDB
 
-import userRoutes from './routes/userRoutes.js'
+import userRoutes from './routes/userRoutes.js';
+import postRoutes from './routes/postRutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
 
 app.get('/', (req, res) => {
     res.send('API Anti-Social funcionando'); // Lo hice para saber si funciona todo lo mas bien.
@@ -21,5 +23,6 @@ app.get('/', (req, res) => {
 connectDB(); 
 
 app.listen(PORT, () => {
-    console.log('Servidor corriendo en http://localhost:${PORT}'); // Aca estoy medio confundido con Express, no se si es https o http
+    console.log(`Servidor corriendo en http://localhost:${PORT}`); // Aca estoy medio confundido con Express, no se si es https o http
 });
+
