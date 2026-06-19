@@ -8,12 +8,14 @@ import {
 
 import { validateSchema } from '../schemas/userSchema.js';
 import { createPostSchema} from '../schemas/postSchema.js';
-
+import { addTagToPost } from '../controllers/tagController.js';
 const router = Router();
 
 router.post('/', validateSchema(createPostSchema), createPost);
 router.get('/', getAllPosts);
-router.get('/', getAllPosts);
+
+router.post('/:id/tags', addTagToPost);
+
 router.delete('/:id', deletePost);
 
 
