@@ -21,7 +21,7 @@ export const addTagToPost = async (req, res) => {
     // 2. Buscamos la etiqueta, o la creamos si es la primera vez que se usa.
     let tag = await Tag.findOne({
        name: name.toLowerCase() 
-    }); // Aca si o si utilizamos let porque si la etiqueta no existe, se la crea y se guarda el nuevo valor en la variable. Se entiende?
+    }); // Aca si o si utilizamos let porque si la etiqueta no existe, se crea una nueva y se guarda el nuevo valor en la variable. Se entiende?
 
     // Si no existe la etiqueta, la creamos
     if (!tag){
@@ -30,7 +30,21 @@ export const addTagToPost = async (req, res) => {
         });
     }
 
-    // Asociamos la etiqueta al post
+    // Asociamos la etiqueta al post y evitamos repetidos.
+
+    const tagExists = post.tags.some(
+        tagId => tagId.toString() === tag._id.toString()
+    );
+
+    // Si la etiqueta ya existe:
+
+    if(tagExists){
+        return res.status(200).json({
+            message: "La etiqueta ya estaba asociada al post", tag
+        });
+    }
+
+    // Si no existe la etiqueta, se agrega al post
 
     post.tags.push(tag._id);
 
