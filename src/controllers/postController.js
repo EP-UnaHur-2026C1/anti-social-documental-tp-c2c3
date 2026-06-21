@@ -69,7 +69,17 @@ export const getAllPosts = async (req, res) => {
     */
 
     // 3. Buscamos todos los posts con sus relaciones
-    const posts = await Post.find().populate('tags').sort({ createdAt: -1})
+    const posts = await Post.find().populate('tags').sort({ createdAt: -1});
+
+    // Recorremos cada post y se le agrega sus comentarios
+
+    for (const post of post){
+      const comments = await Comment.find({
+        post_id: post._id
+      });
+
+      post._doc.comments = comments; // Todos los comentarios de un post, se encuentrarn guardados en post._doc, donde si hacemos un GET, devolveria una sección con Comentarios.
+    }
 
     res.status(200).json(posts);
     
