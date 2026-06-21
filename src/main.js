@@ -6,7 +6,7 @@ import express from 'express';
 import connectDB from './config/database.js'; // Importamos la conexion MongoDB
 
 import userRoutes from './routes/userRoutes.js';
-import postRoutes from './routes/postRutes.js';
+import postRoutes from './routes/postRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
