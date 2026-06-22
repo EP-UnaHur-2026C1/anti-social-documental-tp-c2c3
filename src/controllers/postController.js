@@ -56,29 +56,24 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    /*
-
-    Esto no seria necesario porque ya no las utilizamos, pero no se si dejarlas o no.
-
-    // 1. Leemos la variable de entorno o usamos 6 por defecto
+    // Calculamos la fecha límite 
     const maxMonths = parseInt(process.env.COMMENT_MAX_AGE_MONTHS) || 6;
-    
-    // 2. Calculamos la fecha límite (Hace X meses exactos desde hoy)
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - maxMonths);
-    */
 
-    // 3. Buscamos todos los posts con sus relaciones
-    const posts = await Post.find().populate('tags').sort({ createdAt: -1});
+    // Buscamos los posts
+    // .lean() convierte los documentos de Mongoose a objetos JS puros
+    // permite mutarlos (agregar comments) sin usar _doc.
+    const posts = await Post.find().populate('tags').sort({ createdAt: -1 }).lean();
 
-    // Recorremos cada post y se le agrega sus comentarios
-
-    for (const post of post){
+    // Recorremos cada post y buscamos sus comentarios filtrados
+    for (const post of posts) { 
       const comments = await Comment.find({
-        post_id: post._id
+        post_id: post._id,
+        createdAt: { $gte: cutoffDate } //trae SOLO los más nuevos que la fecha de corte
       });
 
-      post._doc.comments = comments; // Todos los comentarios de un post, se encuentrarn guardados en post._doc, donde si hacemos un GET, devolveria una sección con Comentarios.
+      post.comments = comments; 
     }
 
     res.status(200).json(posts);
