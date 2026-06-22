@@ -56,7 +56,7 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    // Calculamos la fecha límite 
+    // Obtener fecha desde .env
     const maxMonths = parseInt(process.env.COMMENT_MAX_AGE_MONTHS) || 6;
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - maxMonths);
