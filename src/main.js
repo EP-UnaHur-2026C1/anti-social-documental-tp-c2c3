@@ -1,7 +1,7 @@
 console.log("UnaHur - Anti-Social net");
 // Bueno aca se descarga express, dejo el comando:
 // npm i express dotenv
-
+import cors from 'cors';
 import express from 'express';
 import connectDB from './config/database.js'; // Importamos la conexion MongoDB
 
@@ -10,9 +10,11 @@ import postRoutes from './routes/postRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+//const swaggerDocument = YAML.load('./swagger.yaml');
+app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json());
 
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
