@@ -131,3 +131,27 @@ export const addImageToPost = async (req, res) => {
     res.status(500).json({ error: 'Error al agregar imagen' });
   }
 };
+
+// ELIMINAR IMAGEN DE UN POST EXISTENTE
+export const deleteImageFromPost = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const { url } = req.body; 
+
+    if (!url) return res.status(400).json({ error: 'La URL a eliminar es obligatoria' });
+
+    // $pull busca en el array 'images' y remueve el string exacto que coincida con 'url'
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { $pull: { images: url } },
+      { new: true }
+    );
+
+    if (!updatedPost) return res.status(404).json({ error: 'Post no encontrado' });
+
+    res.status(200).json({ message: 'Imagen eliminada', post: updatedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar imagen' });
+  }
+};
