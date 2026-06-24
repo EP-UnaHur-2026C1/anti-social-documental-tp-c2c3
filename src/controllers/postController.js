@@ -84,6 +84,33 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
+// ACTUALIZAR POST
+export const updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body; 
+
+    if (!description) {
+      return res.status(400).json({ error: 'La nueva descripción es obligatoria' });
+    }
+
+    // findByIdAndUpdate busca y actualiza. 
+    // { new: true } devuelve el documento actualizado en lugar del anterior
+    const updatedPost = await Post.findByIdAndUpdate(
+      id, 
+      { $set: { description } }, // $set indica qué campos se deben modificar
+      { new: true } 
+    );
+
+    if (!updatedPost) return res.status(404).json({ error: 'Post no encontrado' });
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar el post' });
+  }
+};
+
 // ELIMINAR POST
 export const deletePost = async (req, res) => {
   try {
