@@ -4,17 +4,18 @@ console.log("UnaHur - Anti-Social net");
 import cors from 'cors';
 import express from 'express';
 import connectDB from './config/database.js'; // Importamos la conexion MongoDB
-
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-//const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load('./swagger.yaml');
 app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json());
 
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 

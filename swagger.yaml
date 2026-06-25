@@ -1,0 +1,309 @@
+openapi: 3.0.3
+info:
+  title: UnaHur Anti-Social Net API (MongoDB)
+  description: API documentada para el MVP utilizando MongoDB, Mongoose y validaciones con Joi.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+tags:
+  - name: Usuarios
+  - name: Publicaciones
+  - name: Comentarios
+  - name: Etiquetas
+  - name: Imágenes
+
+paths:
+  /users:
+    post:
+      tags: [Usuarios]
+      summary: Crear usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nickName]
+              properties:
+                nickName:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  example: "diego_dev"
+      responses:
+        '201':
+          description: Creado exitosamente
+        '400':
+          description: Error de validación o usuario duplicado (código 11000)
+    get:
+      tags: [Usuarios]
+      summary: Obtener todos los usuarios
+      responses:
+        '200':
+          description: Lista de usuarios
+  
+  /users/{nickName}:
+    get:
+      tags: [Usuarios]
+      summary: Obtener usuario por nickName
+      parameters:
+        - name: nickName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+        '404':
+          description: Usuario no encontrado
+    put:
+      tags: [Usuarios]
+      summary: Actualizar usuario
+      parameters:
+        - name: nickName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [newNickName]
+              properties:
+                newNickName:
+                  type: string
+                  example: "diego_wollok"
+      responses:
+        '200':
+          description: Usuario actualizado
+    delete:
+      tags: [Usuarios]
+      summary: Eliminar usuario
+      parameters:
+        - name: nickName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario eliminado correctamente
+        '404':
+          description: Usuario no encontrado
+
+  /posts:
+    post:
+      tags: [Publicaciones]
+      summary: Crear publicación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description, user_nickName]
+              properties:
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 280
+                  example: "Proyecto: Videojuego en pixel art estilo retro (Wollok Game) con magos elementales y enemigos/bosses."
+                user_nickName:
+                  type: string
+                  minLength: 3
+                  example: "diego_wollok"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  example: ["https://miservidor.com/sprites_50x50.png"]
+      responses:
+        '201':
+          description: Post creado
+        '400':
+          description: Error de validación
+        '404':
+          description: Usuario no existe
+    get:
+      tags: [Publicaciones]
+      summary: Obtener publicaciones
+      description: Devuelve las publicaciones con etiquetas pobladas y comentarios filtrados por antigüedad.
+      responses:
+        '200':
+          description: Lista de publicaciones
+
+  /posts/{id}:
+    put:
+      tags: [Publicaciones]
+      summary: Actualizar descripción del post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description]
+              properties:
+                description:
+                  type: string
+                  example: "Las imágenes de sprites se están ajustando a 50x50 px."
+      responses:
+        '200':
+          description: Post actualizado
+    delete:
+      tags: [Publicaciones]
+      summary: Eliminar publicación
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post eliminado
+        '404':
+          description: Post no encontrado
+
+  /posts/{id}/tags:
+    post:
+      tags: [Etiquetas]
+      summary: Agregar etiqueta al post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  example: "pixel-art"
+      responses:
+        '200':
+          description: Etiqueta vinculada
+
+  /posts/{id}/comments:
+    post:
+      tags: [Comentarios]
+      summary: Comentar publicación
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text, user_nickName]
+              properties:
+                text:
+                  type: string
+                  example: "¡Me encantan los diseños de los enemigos!"
+                user_nickName:
+                  type: string
+                  example: "jugador_1"
+      responses:
+        '201':
+          description: Comentario creado
+        '404':
+          description: Post o usuario no encontrado
+    get:
+      tags: [Comentarios]
+      summary: Obtener comentarios de un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de comentarios del post
+  
+  /posts/comments/{id}:
+    delete:
+      tags: [Comentarios]
+      summary: Eliminar comentario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comentario eliminado
+        '404':
+          description: Comentario no encontrado
+
+  /posts/{id}/images:
+    post:
+      tags: [Imágenes]
+      summary: Agregar imagen incrustada
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: "https://miservidor.com/boss_final.png"
+      responses:
+        '200':
+          description: Imagen agregada
+    delete:
+      tags: [Imágenes]
+      summary: Eliminar imagen incrustada
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Imagen eliminada
