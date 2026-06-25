@@ -12,7 +12,7 @@ import {
 import { validateSchema } from '../schemas/userSchema.js';
 import { createPostSchema} from '../schemas/postSchema.js';
 import { addTagToPost } from '../controllers/tagController.js';
-import { createComment, getCommentsByPost, deleteComment } from '../controllers/commentController.js'
+import { createComment, getCommentsByPost, updateComment, deleteComment } from '../controllers/commentController.js'
 
 const router = Router();
 
@@ -22,10 +22,13 @@ router.get('/', getAllPosts);
 router.put('/:id', updatePost)
 router.delete('/:id', deletePost);
 
-// Relaciones: Tags y Comentarios
+// Relaciones: Tags 
 router.post('/:id/tags', addTagToPost);
+
+// CRUD de Comentarios
 router.post('/:id/comments', createComment);
 router.get('/:id/comments', getCommentsByPost);
+router.put('/comments/:id', updateComment);
 router.delete('/comments/:id', deleteComment);
 
 // Realaciones: Imagenes por Inscrustación

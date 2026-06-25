@@ -2,6 +2,7 @@ import Comment from '../models/Comment.js';
 import Post from '../models/Post.js';
 import User from '../models/User.js';
 
+// CREAR COMENTARIO
 export const createComment = async (req, res) => {
   try {
     const { id } = req.params; // Obtenemos el ID del post desde la URL
@@ -44,6 +45,7 @@ export const createComment = async (req, res) => {
   }
 };
 
+// OBTENER COMENTARIOS POR POST
 export const getCommentsByPost = async (req, res) => {
   try {
     const { id } = req.params;
@@ -71,6 +73,35 @@ export const getCommentsByPost = async (req, res) => {
   }
 };
 
+// ACTUALIZAR COMENTARIO
+export const updateComment = async (req, res) => {
+  try {
+    const { id } = req.params; // El ID del comentario a modificar
+    const { text } = req.body; // El nuevo texto que envía el usuario
+
+    if (!text) {
+      return res.status(400).json({ error: 'El texto del comentario es obligatorio' });
+    }
+
+    // Buscamos el comentario por ID y actualizamos su campo 'text'
+    const updatedComment = await Comment.findByIdAndUpdate(
+      id,
+      { $set: { text } },
+      { new: true }
+    );
+
+    if (!updatedComment) {
+      return res.status(404).json({ error: 'Comentario no encontrado' });
+    }
+
+    res.status(200).json(updatedComment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar el comentario' });
+  }
+};
+
+// ELIMINAR COMENTARIO
 export const deleteComment = async (req, res) => {
   try {
     const { id } = req.params;
