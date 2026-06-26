@@ -589,6 +589,27 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "5. Obtener post por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/6a3dd5fad80fdb8a6715cfb9",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "6a3dd5fad80fdb8a6715cfb9"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -596,7 +617,7 @@
       "name": "3. Imagenes",
       "item": [
         {
-          "name": "Agregar imagen a post existente - Incrustación",
+          "name": "1. Agregar imagen a post existente - Incrustación",
           "request": {
             "method": "POST",
             "header": [],
@@ -627,7 +648,7 @@
           "response": []
         },
         {
-          "name": "Borrar imagen a post existente - Incrustación",
+          "name": "2. Borrar imagen a post existente - Incrustación",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -651,6 +672,47 @@
                 "api",
                 "posts",
                 "6a3881277620da6281cfee63",
+                "images"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Agregar imagen a post existente - Multer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "id": 0,
+                  "fileUploadError": "",
+                  "src": [
+                    "c:\\Users\\Matias\\Desktop\\Trabajos Practicos EP - CIU\\anti-social-documental-tp-c2c3\\assets\\LogoUnahur.png"
+                  ]
+                }
+              ],
+              "options": {
+                "formdata": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/6a3dd5fad80fdb8a6715cfb9/images",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "6a3dd5fad80fdb8a6715cfb9",
                 "images"
               ]
             }
