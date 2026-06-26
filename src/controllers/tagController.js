@@ -89,6 +89,23 @@ export const getAllTags = async (req, res) => {
   }
 };
 
+// OBTENER ETIQUETA POR ID
+export const getTagById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tag = await Tag.findById(id);
+
+    if (!tag) {
+      return res.status(404).json({ error: 'Etiqueta no encontrada' });
+    }
+
+    res.status(200).json(tag);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al consultar la etiqueta' });
+  }
+};
+
 // ACTUALIZAR ETIQUETA
 export const updateTag = async (req, res) => {
   try {
@@ -129,5 +146,28 @@ export const deleteTag = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al eliminar la etiqueta' });
+  }
+};
+
+// ELIMINAR TAG DE POST
+export const removeTagFromPost = async (req, res) => {
+  try {
+    const { id, tagId } = req.params; // id = ID del Post | tagId = ID de la Etiqueta
+
+    // Usamos $pull para quitar el tagId del array 'tags' del Post
+    const post = await Post.findByIdAndUpdate(
+      id,
+      { $pull: { tags: tagId } },
+      { new: true } // Devuelve el post actualizado
+    );
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post no encontrado' });
+    }
+
+    res.status(200).json({ message: 'Etiqueta removida del post exitosamente', post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al remover la etiqueta del post' });
   }
 };

@@ -10,7 +10,7 @@ import {
 } from '../controllers/postController.js';
 import { validateSchema } from '../schemas/userSchema.js';
 import { createPostSchema} from '../schemas/postSchema.js';
-import { addTagToPost } from '../controllers/tagController.js';
+import { addTagToPost, removeTagFromPost } from '../controllers/tagController.js';
 import {
     getAllComments, 
     getCommentById, 
@@ -39,6 +39,7 @@ router.delete('/:id', deletePost);
 
 // Relaciones: Tags 
 router.post('/:id/tags', addTagToPost);
+router.delete('/:id/tags/:tagId', removeTagFromPost);
 
 // Relaciones: Comentarios incrustados en un Post
 router.post('/:id/comments', createComment);
