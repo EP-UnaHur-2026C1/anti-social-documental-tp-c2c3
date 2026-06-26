@@ -289,13 +289,13 @@
           "response": []
         },
         {
-          "name": "Registrar Usuario - MDW - OK",
+          "name": "1. Registrar Usuario - MDW - OK",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nickName\": \"matias_calderon\"\r\n}",
+              "raw": "{\r\n  \"nickName\": \"usuarioeliminar\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -318,27 +318,7 @@
           "response": []
         },
         {
-          "name": "Obtener todos los usuarios",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/users",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "users"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener usuarios por nickName",
+          "name": "2. Obtener usuarios por nickName",
           "request": {
             "method": "GET",
             "header": [],
@@ -359,7 +339,27 @@
           "response": []
         },
         {
-          "name": "Actualizar Usuario",
+          "name": "3. Obtener todos los usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Actualizar Usuario",
           "request": {
             "method": "PUT",
             "header": [],
@@ -387,19 +387,23 @@
             }
           },
           "response": []
-        }
-      ]
-    },
-    {
-      "name": "2. Posts",
-      "item": [
+        },
         {
-          "name": "Obtener todos los posts",
+          "name": "5. Eliminar usuario por nickName",
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"newNickName\": \"mnc_nuevo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "http://localhost:3000/api/posts",
+              "raw": "http://localhost:3000/api/users/usuarioeliminar",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -407,12 +411,18 @@
               "port": "3000",
               "path": [
                 "api",
-                "posts"
+                "users",
+                "usuarioeliminar"
               ]
             }
           },
           "response": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "2. Posts",
+      "item": [
         {
           "name": "Registrar Post - MDW - Falta descripcion",
           "request": {
@@ -472,7 +482,7 @@
           "response": []
         },
         {
-          "name": "Registrar Post - MDW - OK",
+          "name": "1. Registrar Post - MDW - OK",
           "request": {
             "method": "POST",
             "header": [],
@@ -501,13 +511,63 @@
           "response": []
         },
         {
-          "name": "Actualizar Post - Descripción",
+          "name": "2. Obtener todos los posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Actualizar Post - Descripción",
           "request": {
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n  \"description\": \"Me equivoqué, esta es la descripción corregida.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/6a3881277620da6281cfee63",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "6a3881277620da6281cfee63"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Eliminar post por id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -609,7 +669,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"name\": \"ProbandoTag\"\r\n}",
+              "raw": "{\r\n  \"name\": \"Eliminar\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -617,7 +677,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/posts/6a3dbbddcfce93331a668ae2/tags",
+              "raw": "http://localhost:3000/api/posts/6a3dd5fad80fdb8a6715cfb9/tags",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -626,7 +686,7 @@
               "path": [
                 "api",
                 "posts",
-                "6a3dbbddcfce93331a668ae2",
+                "6a3dd5fad80fdb8a6715cfb9",
                 "tags"
               ]
             }
@@ -728,6 +788,50 @@
                 "api",
                 "tags",
                 "6a3dbadbcfce93331a668add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Obtener tag por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/tags/6a3dd567d80fdb8a6715cfb6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "tags",
+                "6a3dd567d80fdb8a6715cfb6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Eliminar tag de Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/6a3dd5fad80fdb8a6715cfb9/tags/6a3e96fd01824767d8ff2a1f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "6a3dd5fad80fdb8a6715cfb9",
+                "tags",
+                "6a3e96fd01824767d8ff2a1f"
               ]
             }
           },
@@ -839,6 +943,49 @@
                 "posts",
                 "comments",
                 "6a3dbf27d80fdb8a6715cfb2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Obtener todos los comentarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Obtener comentario por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/comments/6a3dd568d80fdb8a6715cfb7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "comments",
+                "6a3dd568d80fdb8a6715cfb7"
               ]
             }
           },
