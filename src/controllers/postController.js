@@ -4,6 +4,7 @@ import  Comment  from '../models/Comment.js';
 import  Tag  from '../models/Tag.js';
 // En Mongo no tenemos un modelo centrar como index.js, por eso se importa individualmente cada modelo
 
+// CREAR POST
 export const createPost = async (req, res) => {
   try {
     const { description, user_nickName, images } = req.body;
@@ -54,6 +55,7 @@ export const createPost = async (req, res) => {
   }
 };
 
+// OBTENER TODOS LOS POSTS 
 export const getAllPosts = async (req, res) => {
   try {
     // Obtener fecha desde .env
@@ -134,7 +136,7 @@ export const deletePost = async (req, res) => {
 };
 
 // AGREGAR IMAGEN A UN POST EXISTENTE
-export const addImageToPost = async (req, res) => {
+/*export const addImageToPost = async (req, res) => {
   try {
     const { id } = req.params; 
     const { url } = req.body;
@@ -156,6 +158,37 @@ export const addImageToPost = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al agregar imagen' });
+  }
+};*/
+
+// AGREGAR IMAGEN A UN POST EXISTENTE (BONUS CON MULTER)
+export const addImageToPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'Se requiere subir un archivo de imagen válido' });
+    }
+
+    // URL local simulando un servidor web
+    // http://localhost:3000/uploads/16912345-imagen.jpg
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
+    // Guardamos la URL en la base de datos
+    const post = await Post.findByIdAndUpdate(
+      id,
+      { $push: { images: imageUrl } },
+      { new: true }
+    );
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post no encontrado' });
+    }
+
+    res.status(200).json({ message: 'Imagen subida y agregada con éxito', post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al subir la imagen' });
   }
 };
 

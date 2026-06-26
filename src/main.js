@@ -16,6 +16,7 @@ const swaggerDocument = YAML.load('./swagger.yaml');
 app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json());
 
+app.use('/uploads', express.static('uploads'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);

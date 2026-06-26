@@ -19,6 +19,7 @@ import {
     deleteComment, 
     updateComment 
 } from '../controllers/commentController.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = Router();
 
@@ -46,7 +47,8 @@ router.post('/:id/comments', createComment);
 router.get('/:id/comments', getCommentsByPost);
 
 // Relaciones: Imagenes por Incrustación
-router.post('/:id/images', addImageToPost);       
+router.post('/:id/images', upload.single('image'), addImageToPost); //Bonus con imagenes, se sube la imagen y se guarda en el post correspondiente
+//router.post('/:id/images', addImageToPost);       
 router.delete('/:id/images', deleteImageFromPost);
 
 export default router;
