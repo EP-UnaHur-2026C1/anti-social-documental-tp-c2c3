@@ -33,12 +33,17 @@ Antes de ejecutar las pruebas en Postman:
 ## 3. Flujo Principal E2E (IMPORTANTE)
 
 ### PASO PREVIO OBLIGATORIO (Carga de Imagen Física)
-Como Postman no exporta archivos físicos locales al generar el JSON, **es necesario adjuntar una imagen manualmente** antes de correr la prueba automatizada para que Multer funcione correctamente:
-1. Despliegue la carpeta `0. Flujo Principal - E2E - TestDocente`.
-2. Haga clic en la petición **"12. Agregar imagen a post existente - Multer (VER INSTRUCTIVO)"**.
-3. Vaya a la pestaña **Body** (`form-data`).
-4. En la fila `image`, haga clic en "Select Files" y elija cualquier imagen (.jpg, .png) desde su computadora. (En la carpeta assets existe LogoUnahur.png)
-5. Guarde los cambios en la petición (Ctrl + S o botón Save).
+**ATENCIÓN: Si se usa desde la aplicación de escritorio (Postman.exe)**
+Por cuestiones de seguridad, el "Collection Runner" de la app de escritorio bloquea el acceso a archivos que no se encuentren dentro de su entorno de trabajo autorizado. Para evitar un Error 400:
+1. En Postman, vaya a **Settings** (⚙️) > **General** y busque la sección **Working Directory**.
+2. Verifique la ruta configurada (suele ser `C:\Users\<SuUsuario>\Postman\files`). Si la carpeta no existe, créela.
+3. Copie una imagen cualquiera (`.png` o `.jpg`) y **péguela exactamente dentro de esa carpeta**. (En assets tenemos LogoUnahur.png o ANTI-SOCIALNET.jpeg)
+4. Despliegue la carpeta `0. Flujo Principal - E2E` y seleccione la petición **"12. Agregar imagen a post existente - Multer"**.
+5. En la pestaña **Body** (`form-data`), elimine el archivo roto haciendo clic en la "X" de la fila `image`.
+6. Haga clic en "Select Files" y seleccione la imagen **desde la carpeta Working Directory de Postman**.
+7. Guarde los cambios de la petición (Ctrl + S o botón Save).
+
+*(Nota: Si realiza las pruebas utilizando la extensión de Postman integrada en VS Code, puede omitir la configuración del directorio y simplemente seleccionar cualquier imagen de su computadora).*
 
 ### Ejecutar el Flujo
 1. Haga clic en los tres puntos (`...`) junto a la carpeta **`0. Flujo Principal - E2E - TestDocente`** y seleccione **Run folder**.
