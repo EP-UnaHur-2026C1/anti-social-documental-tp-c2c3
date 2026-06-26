@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import { upload } from '../middlewares/upload.js';
 import {
     createPost,
     getAllPosts,
@@ -28,7 +28,6 @@ router.get('/comments', getAllComments);
 router.get('/comments/:id', getCommentById);
 router.put('/comments/:id', updateComment);
 router.delete('/comments/:id', deleteComment);
-
 // RUTAS GENERALES DE POSTS
 router.post('/', validateSchema(createPostSchema), createPost);
 router.get('/', getAllPosts);
@@ -48,5 +47,7 @@ router.get('/:id/comments', getCommentsByPost);
 // Relaciones: Imagenes por Incrustación
 router.post('/:id/images', addImageToPost);       
 router.delete('/:id/images', deleteImageFromPost);
-
+//GUARDAR IMAGENES DE UN POST EN UNA CARPETA
+// Usamos upload.single('imagen') si es una, o upload.array('imagenes', 5) si son varias
+router.post('/:id/images/upload', upload.single('imagen'), uploadImageToPost);
 export default router;
