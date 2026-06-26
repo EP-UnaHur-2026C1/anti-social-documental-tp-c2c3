@@ -228,7 +228,8 @@ paths:
   /posts/{id}/images:
     post:
       tags: [Imágenes]
-      summary: Agregar imagen incrustada
+      summary: Agregar imagen física al post (Upload)
+      description: Sube una imagen al servidor (Multer) y guarda su ruta estática en el post.
       parameters:
         - name: id
           in: path
@@ -238,18 +239,21 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
-              required: [url]
               properties:
-                url:
+                image:
                   type: string
-                  format: uri
-                  example: "https://localhost:3000/boss_final.png"
+                  format: binary
+                  description: Archivo físico de la imagen (JPG, PNG, etc.)
       responses:
         '200':
-          description: Imagen agregada
+          description: Imagen subida y agregada con éxito
+        '400':
+          description: Se requiere subir un archivo de imagen válido
+        '404':
+          description: Post no encontrado
     delete:
       tags: [Imágenes]
       summary: Eliminar imagen incrustada
@@ -270,6 +274,7 @@ paths:
                 url:
                   type: string
                   format: uri
+                  example: "http://localhost:3000/uploads/LogoUnahur_20260626134852631.png"
       responses:
         '200':
           description: Imagen eliminada
