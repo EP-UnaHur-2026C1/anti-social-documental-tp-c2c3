@@ -13,6 +13,7 @@ tags:
   - name: Imágenes
 
 paths:
+
   /users:
     post:
       tags: [Usuarios]
@@ -201,6 +202,55 @@ paths:
         '200':
           description: Etiqueta vinculada
 
+  /posts/{id}/images:
+    post:
+      tags: [Imágenes]
+      summary: Agregar imagen incrustada
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: "https://localhost:3000/boss_final.png"
+      responses:
+        '200':
+          description: Imagen agregada
+    delete:
+      tags: [Imágenes]
+      summary: Eliminar imagen incrustada
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Imagen eliminada
+
   /posts/{id}/comments:
     post:
       tags: [Comentarios]
@@ -244,6 +294,31 @@ paths:
           description: Lista de comentarios del post
   
   /posts/comments/{id}:
+    put:
+      tags: [Comentarios]
+      summary: Actualizar comentario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  example: "Este es el texto corregido del comentario."
+      responses:
+        '200':
+          description: Comentario actualizado
+        '404':
+          description: Comentario no encontrado
     delete:
       tags: [Comentarios]
       summary: Eliminar comentario
@@ -259,10 +334,37 @@ paths:
         '404':
           description: Comentario no encontrado
 
-  /posts/{id}/images:
+  /tags:
     post:
-      tags: [Imágenes]
-      summary: Agregar imagen incrustada
+      tags: [Etiquetas]
+      summary: Crear etiqueta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  example: "desarrollo web"
+      responses:
+        '201':
+          description: Etiqueta creada exitosamente
+        '400':
+          description: Error de validación o etiqueta ya existente
+    get:
+      tags: [Etiquetas]
+      summary: Obtener todas las etiquetas
+      responses:
+        '200':
+          description: Lista de etiquetas
+          
+  /tags/{id}:
+    put:
+      tags: [Etiquetas]
+      summary: Actualizar etiqueta
       parameters:
         - name: id
           in: path
@@ -275,35 +377,29 @@ paths:
           application/json:
             schema:
               type: object
-              required: [url]
+              required: [name]
               properties:
-                url:
+                name:
                   type: string
-                  format: uri
-                  example: "https://miservidor.com/boss_final.png"
+                  example: "tecnología avanzada"
       responses:
         '200':
-          description: Imagen agregada
+          description: Etiqueta actualizada
+        '400':
+          description: El nuevo nombre ya está en uso
+        '404':
+          description: Etiqueta no encontrada
     delete:
-      tags: [Imágenes]
-      summary: Eliminar imagen incrustada
+      tags: [Etiquetas]
+      summary: Eliminar etiqueta
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [url]
-              properties:
-                url:
-                  type: string
-                  format: uri
       responses:
         '200':
-          description: Imagen eliminada
+          description: Etiqueta eliminada correctamente
+        '404':
+          description: Etiqueta no encontrada
