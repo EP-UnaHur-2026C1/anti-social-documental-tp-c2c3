@@ -202,6 +202,29 @@ paths:
         '200':
           description: Etiqueta vinculada
 
+  /posts/{id}/tags/{tagId}:
+    delete:
+      tags: [Etiquetas]
+      summary: Eliminar etiqueta de un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del post
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID de la etiqueta
+      responses:
+        '200':
+          description: Etiqueta removida del post exitosamente
+        '404':
+          description: Post no encontrado
+
   /posts/{id}/images:
     post:
       tags: [Imágenes]
@@ -251,6 +274,69 @@ paths:
         '200':
           description: Imagen eliminada
 
+  /posts/comments:
+    get:
+      tags: [Comentarios]
+      summary: Obtener todos los comentarios
+      responses:
+        '200':
+          description: Lista de todos los comentarios
+
+  /posts/comments/{id}:
+    get:
+      tags: [Comentarios]
+      summary: Obtener un comentario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comentario encontrado
+        '404':
+          description: Comentario no encontrado
+    put:
+      tags: [Comentarios]
+      summary: Actualizar comentario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  example: "Este es el texto corregido del comentario."
+      responses:
+        '200':
+          description: Comentario actualizado
+        '404':
+          description: Comentario no encontrado
+    delete:
+      tags: [Comentarios]
+      summary: Eliminar comentario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comentario eliminado
+        '404':
+          description: Comentario no encontrado
+
   /posts/{id}/comments:
     post:
       tags: [Comentarios]
@@ -292,47 +378,6 @@ paths:
       responses:
         '200':
           description: Lista de comentarios del post
-  
-  /posts/comments/{id}:
-    put:
-      tags: [Comentarios]
-      summary: Actualizar comentario
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [text]
-              properties:
-                text:
-                  type: string
-                  example: "Este es el texto corregido del comentario."
-      responses:
-        '200':
-          description: Comentario actualizado
-        '404':
-          description: Comentario no encontrado
-    delete:
-      tags: [Comentarios]
-      summary: Eliminar comentario
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Comentario eliminado
-        '404':
-          description: Comentario no encontrado
 
   /tags:
     post:
@@ -362,6 +407,20 @@ paths:
           description: Lista de etiquetas
           
   /tags/{id}:
+    get:
+      tags: [Etiquetas]
+      summary: Obtener etiqueta por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Etiqueta encontrada
+        '404':
+          description: Etiqueta no encontrada
     put:
       tags: [Etiquetas]
       summary: Actualizar etiqueta
