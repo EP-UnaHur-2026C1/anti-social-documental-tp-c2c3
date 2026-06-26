@@ -1,3 +1,4 @@
+import redisClient from '../config/redis.js';
 import  Post  from '../models/Post.js';
 import  User  from '../models/User.js';
 import  Comment  from '../models/Comment.js';
@@ -45,6 +46,8 @@ export const createPost = async (req, res) => {
       include: [PostImage] // Esto hace un JOIN automático con Sequelize
     });
     */
+   // Borramos la caché para forzar a que el próximo GET busque datos frescos
+    await redisClient.del('all_posts');
 
     res.status(201).json(newPost);
 
@@ -56,6 +59,16 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
+    //Intentamos obtener los post desde caché
+    const cachedPosts = await redisClient.get('all_posts');
+    
+    if (cachedPosts) {
+      console.log("Servido desde Redis");
+      // Los datos en Redis son strings puros, debemos convertirlos a JSON
+      return res.status(200).json(JSON.parse(cachedPosts));
+    }
+    // Si llegamos aquí, la caché estaba vacía
+    console.log("Servido desde MongoDB ");
     // Obtener fecha desde .env
     const maxMonths = parseInt(process.env.COMMENT_MAX_AGE_MONTHS) || 6;
     const cutoffDate = new Date();
@@ -75,7 +88,8 @@ export const getAllPosts = async (req, res) => {
 
       post.comments = comments; 
     }
-
+    //Guardar en caché
+    await redisClient.setEx('all_posts', 3600, JSON.stringify(posts));
     res.status(200).json(posts);
     
   } catch (error) {
@@ -103,7 +117,8 @@ export const updatePost = async (req, res) => {
     );
 
     if (!updatedPost) return res.status(404).json({ error: 'Post no encontrado' });
-
+    // Borramos la caché para forzar a que el próximo GET busque datos frescos
+    await redisClient.del('all_posts');
     res.status(200).json(updatedPost);
   } catch (error) {
     console.error(error);
@@ -124,7 +139,8 @@ export const deletePost = async (req, res) => {
 
     // 2. Eliminamos el registro de la base de datos
     await post.deleteOne();  // .destoy()
-
+    
+    await redisClient.del('all_posts');
     res.status(200).json({ message: 'Publicación eliminada correctamente' });
 
   } catch (error) {
@@ -151,7 +167,7 @@ export const addImageToPost = async (req, res) => {
     );
 
     if (!updatedPost) return res.status(404).json({ error: 'Post no encontrado' });
-
+    await redisClient.del('all_posts');
     res.status(200).json(updatedPost);
   } catch (error) {
     console.error(error);
@@ -175,7 +191,7 @@ export const deleteImageFromPost = async (req, res) => {
     );
 
     if (!updatedPost) return res.status(404).json({ error: 'Post no encontrado' });
-
+    await redisClient.del('all_posts');
     res.status(200).json({ message: 'Imagen eliminada', post: updatedPost });
   } catch (error) {
     console.error(error);
