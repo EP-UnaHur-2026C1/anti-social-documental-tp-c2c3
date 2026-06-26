@@ -2,6 +2,34 @@ import Comment from '../models/Comment.js';
 import Post from '../models/Post.js';
 import User from '../models/User.js';
 
+// OBTENER TODOS LOS COMENTARIOS
+export const getAllComments = async (req, res) => {
+  try {
+    const comments = await Comment.find();
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los comentarios' });
+  }
+};
+
+// OBTENER COMENTARIO POR ID
+export const getCommentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comment = await Comment.findById(id);
+
+    if (!comment) {
+      return res.status(404).json({ error: 'Comentario no encontrado' });
+    }
+
+    res.status(200).json(comment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener el comentario' });
+  }
+};
+
 // CREAR COMENTARIO
 export const createComment = async (req, res) => {
   try {
