@@ -32,7 +32,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nickName\": \"docente\"\r\n}",
+              "raw": "{\r\n  \"nickName\": \"unDocente\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -61,10 +61,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "if (pm.response.code === 201) {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.collectionVariables.set(\"postId\", jsonData._id);\r",
-                  "}"
+                  "pm.collectionVariables.set(\"postId\", pm.response.json()._id);"
                 ],
                 "type": "text/javascript",
                 "packages": {}
@@ -76,7 +73,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"description\": \"Post para probar flujo.\",\r\n  \"user_nickName\": \"{{userNick}}\"\r\n}",
+              "raw": "{\r\n    \"description\": \"Post E2E\", \r\n    \"user_nickName\": \"{{userNick}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -99,13 +96,25 @@
           "response": []
         },
         {
-          "name": "3. Agregar Tag a Post",
+          "name": "3. Agregar Tag a Post 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"tagId1\", pm.response.json().tag._id);"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"name\": \"esperemosAprobado\"\r\n}",
+              "raw": "{\r\n  \"name\": \"PrimerTag\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -130,17 +139,13 @@
           "response": []
         },
         {
-          "name": "4. Agregar comentario a post existente",
+          "name": "4. Agregar Tag a Post 2",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "if (pm.response.code === 201) {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.collectionVariables.set(\"commentId\", jsonData._id);\r",
-                  "    console.log(\"ID del comentario guardado: \" + jsonData._id);\r",
-                  "}"
+                  "pm.collectionVariables.set(\"tagId2\", pm.response.json().tag._id);"
                 ],
                 "type": "text/javascript",
                 "packages": {}
@@ -152,7 +157,103 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"text\": \"¡Buena prueba!\",\r\n  \"user_nickName\": \"{{userNick}}\"\r\n}",
+              "raw": "{\r\n  \"name\": \"SegundoTag\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}/tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}",
+                "tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Actualizar Tag 1",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"primertagactualizado\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/tags/{{tagId1}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "tags",
+                "{{tagId1}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Eliminar Tag  2 de Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}/tags/{{tagId2}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}",
+                "tags",
+                "{{tagId2}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7 . Agregar comentario 1 a post existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"commentId1\", pm.response.json()._id);"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"text\": \"Agrego un nuevo comentario 1.\",\r\n  \"user_nickName\": \"{{userNick}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -177,7 +278,82 @@
           "response": []
         },
         {
-          "name": "5. Obtener todos los posts",
+          "name": "8 . Agregar comentario 2 a post existente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"commentId2\", pm.response.json()._id);"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"text\": \"Agrego un nuevo comentario 2.\",\r\n  \"user_nickName\": \"{{userNick}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Eliminar Comentario 2",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/comments/{{commentId2}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "comments",
+                "{{commentId2}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Obtener todos los posts",
           "request": {
             "method": "GET",
             "header": [],
@@ -191,6 +367,244 @@
               "path": [
                 "api",
                 "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11. Obtener post por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12. Agregar imagen a post existente - Multer (VER INSTRUCTIVO)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "id": 0,
+                  "fileUploadError": "",
+                  "src": [
+                    "c:\\Users\\Matias\\Desktop\\Trabajos Practicos EP - CIU\\anti-social-documental-tp-c2c3\\assets\\LogoUnahur.png"
+                  ]
+                }
+              ],
+              "options": {
+                "formdata": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}/images",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}",
+                "images"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "13 . Agregar comentario 3 a post existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"commentId3\", pm.response.json()._id);"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"text\": \"Agrego un nuevo comentario 3.\",\r\n  \"user_nickName\": \"{{userNick}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "14. Obtener comentario 3 por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/comments/{{commentId3}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "comments",
+                "{{commentId3}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "15. Actualizar Post - Descripción",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"description\": \"Descripción actualizada al final del test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "16. Obtener post por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "17. Eliminar post por id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/posts/{{postId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "posts",
+                "{{postId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "18. Eliminar usuario por nickName",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"newNickName\": \"mnc_nuevo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/{{userNick}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "{{userNick}}"
               ]
             }
           },
