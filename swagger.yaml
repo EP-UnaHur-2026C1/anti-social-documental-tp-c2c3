@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: UnaHur Anti-Social Net API (MongoDB)
-  description: API documentada para el MVP utilizando MongoDB, Mongoose y validaciones con Joi.
+  description: API documentada para el MVP utilizando MongoDB, Mongoose y validaciones con Joi. Incluye endpoints de subida de imágenes locales y sistema de seguidores.
   version: 1.0.0
 servers:
   - url: http://localhost:3000/api
@@ -39,10 +39,11 @@ paths:
     get:
       tags: [Usuarios]
       summary: Obtener todos los usuarios
+      description: Retorna la lista de usuarios, incluyendo sus arreglos de followers y following.
       responses:
         '200':
           description: Lista de usuarios
-  
+
   /users/{nickName}:
     get:
       tags: [Usuarios]
@@ -55,7 +56,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Usuario encontrado
+          description: Usuario encontrado (incluye arreglos de seguidores)
         '404':
           description: Usuario no encontrado
     put:
@@ -95,6 +96,36 @@ paths:
           description: Usuario eliminado correctamente
         '404':
           description: Usuario no encontrado
+
+  /users/{nickName}/follow:
+    post:
+      tags: [Usuarios]
+      summary: Seguir a otro usuario
+      description: Vincula el ID del usuario objetivo al arreglo de 'following' del usuario actual, y actualiza el 'followers' del objetivo.
+      parameters:
+        - name: nickName
+          in: path
+          required: true
+          description: NickName del usuario que realiza la acción (el que sigue)
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [targetNickName]
+              properties:
+                targetNickName:
+                  type: string
+                  description: NickName del usuario al que se desea seguir
+                  example: "otro_usuario"
+      responses:
+        '200':
+          description: Usuario seguido con éxito
+        '404':
+          description: Uno de los usuarios no fue encontrado
 
   /posts:
     post:
@@ -228,7 +259,7 @@ paths:
   /posts/{id}/images:
     post:
       tags: [Imágenes]
-      summary: Agregar imagen incrustada
+      summary: Agregar imagen incrustada (vía URL)
       parameters:
         - name: id
           in: path
@@ -273,6 +304,36 @@ paths:
       responses:
         '200':
           description: Imagen eliminada
+
+  /posts/{id}/images/upload:
+    post:
+      tags: [Imágenes]
+      summary: Subir archivo de imagen al servidor (Multer)
+      description: Sube una imagen física a la carpeta del servidor y vincula su URL local al post.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                imagen:
+                  type: string
+                  format: binary
+                  description: Archivo de imagen a subir desde tu equipo
+      responses:
+        '200':
+          description: Imagen subida y vinculada exitosamente
+        '400':
+          description: No se detectó ningún archivo en la petición
+        '404':
+          description: Post no encontrado
 
   /posts/comments:
     get:

@@ -182,3 +182,24 @@ export const deleteImageFromPost = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar imagen' });
   }
 };
+//CARGAR IMAGEN DE UN POST EN UNA CARPETA
+export const uploadImageToPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' });
+
+    // Armamos la URL local simulada
+    const localUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { $push: { images: localUrl } },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al procesar la imagen' });
+  }
+};

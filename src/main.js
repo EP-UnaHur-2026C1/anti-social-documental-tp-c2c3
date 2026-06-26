@@ -20,6 +20,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/tags', tagRoutes);
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
     res.send('API Anti-Social funcionando'); // Lo hice para saber si funciona todo lo mas bien.
