@@ -215,3 +215,35 @@ export const deleteImageFromPost = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar imagen' });
   }
 };
+
+// CONSULTAR UN POST PUNTUAL POR ID
+
+export const getPostById = async (req, res) => {
+  try{
+    const { id } = req.params;
+
+    const post = await Post.findById(id).populate('tags');
+
+    if(!post){
+      return res.status(404).json({
+        error: 'Post no encontrado'
+      });
+    }
+
+    const comments = await Comment.find({
+      post_id: id
+    }).sort({ createdAt: -1});
+
+    const postObject = post.toObject();
+    postObject.comments = comments;
+
+    res.status(200).json(postObject);
+  } catch (error){
+    console.error();
+  
+  
+    res.status(500).json({
+      error: 'Error al obtener el post'
+    })
+  };
+} 

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import {
     createPost,
     getAllPosts,
+    getPostById,
     deletePost,
     updatePost,
     addImageToPost,
@@ -33,6 +34,7 @@ router.delete('/comments/:id', deleteComment);
 // RUTAS GENERALES DE POSTS
 router.post('/', validateSchema(createPostSchema), createPost);
 router.get('/', getAllPosts);
+router.get('/:id', getPostById);
 
 // RUTAS CON COMODÍN /:id 
 router.put('/:id', updatePost);
